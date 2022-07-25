@@ -3,17 +3,17 @@ import styles from './Button.module.scss';
 
 interface ButtonProps {
   id: string;
-  onAddSublist: (id: string) => void;
+  onClick?: (id: string) => void;
   children?: ReactNode;
+  type?: 'submit';
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  children,
-  onAddSublist,
-  id,
-}) => {
+export const Button: React.FC<ButtonProps> = ({ children, onClick, id }) => {
   return (
-    <button className={styles.button} onClick={() => onAddSublist(id)}>
+    <button
+      className={styles.button}
+      onClick={() => (onClick ? onClick(id) : null)}
+    >
       {children}
     </button>
   );

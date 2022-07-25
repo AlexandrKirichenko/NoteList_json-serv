@@ -1,12 +1,11 @@
 import React from 'react';
-import './App.css';
+import { ListFeature } from '../features/ListFeature';
+import styles from './App.module.scss';
 
-function App() {
+export const App: React.FC = () => {
   return (
-    <div className="App">
-    
+    <div className={styles.wrap}>
+      <ListFeature />
     </div>
   );
-}
-
-export default App;
+};

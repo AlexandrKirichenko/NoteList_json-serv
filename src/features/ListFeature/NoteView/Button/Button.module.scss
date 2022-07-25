@@ -1,20 +1,24 @@
 .button {
   display: inline-block;
-  outline: 0;
+  outline: none;
   cursor: pointer;
-  border: none;
-  padding: 0 56px;
-  height: 45px;
-  line-height: 45px;
-  border-radius: 7px;
-  background-color: #0070f3;
-  color: white;
+  padding: 0 14px;
+  background-color: #0070d2;
+  border-radius: 0.25rem;
+  border: 1px solid #0070d2;
+  color: #fff;
+  font-size: 14px;
+  line-height: 30px;
   font-weight: 400;
-  font-size: 16px;
-  box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
-  transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
-  :hover{
-    background: rgba(0,118,255,0.9);
-    box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
+  text-align: center;
+  &:hover {
+    background-color: #005fb2;
+    border-color: #005fb2;
   }
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

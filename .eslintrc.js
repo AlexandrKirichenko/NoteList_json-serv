@@ -1,3 +1,4 @@
+/* eslint-disable */
 const types = {
   ERROR: 'error',
   WARN: 'warn',
@@ -121,6 +122,5 @@ module.exports = {
     '@typescript-eslint/no-extraneous-class': types.OFF,
     '@typescript-eslint/explicit-function-return-type': types.OFF,
     '@typescript-eslint/no-empty-function': types.OFF,
- 
   },
 };
