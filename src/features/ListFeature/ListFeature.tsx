@@ -13,7 +13,7 @@ export const ListFeature: FC = () => {
     const noteListStr: string | null = localStorage.getItem(LS_KEY_NOTE_LIST);
     if (noteListStr === null) {
       return {
-        1: { parentId: null, title: '', isEnableSubList: true, order: 1 },
+        1: { parentId: null, title: '', isEnableSubList: false, order: 1 },
       };
     }
     return JSON.parse(noteListStr);
