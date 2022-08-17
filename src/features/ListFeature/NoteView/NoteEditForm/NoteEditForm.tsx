@@ -1,6 +1,8 @@
+import IconButton from '@mui/material/IconButton';
 import { FC } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import AddIcon from '@mui/icons-material/Add';
 import { Button } from '../Button';
 import { NoteEditFormValues } from '../types';
 import styles from './NoteEditForm.module.scss';
@@ -46,9 +48,9 @@ export const NoteEditForm: FC<NoteEditFormProps> = ({
         {...formik.getFieldProps('title')}
         autoFocus={autoFocus}
       />
-      <Button type={'submit'} id={id}>
-        Add
-      </Button>
+      <IconButton type={'submit'} id={id} aria-label="add" size="large">
+        <AddIcon fontSize="inherit" />
+      </IconButton>
     </form>
   );
 };

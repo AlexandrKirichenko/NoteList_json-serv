@@ -71,22 +71,12 @@ export const ListFeature: FC = () => {
   };
 
   const handleDeleteItem = (id: string) => {
-    const newNodeList = deleteItemFromNodeList(
-      id,
-      noteList,
-      noteViewList,
-      true,
-    );
+    const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, true);
     setNoteList(newNodeList);
   };
 
   const handleDeleteSublist = (id: string) => {
-    const newNodeList = deleteItemFromNodeList(
-      id,
-      noteList,
-      noteViewList,
-      false,
-    );
+    const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, false);
     setNoteList({
       ...newNodeList,
       [id]: { ...noteList[id], isEnableSubList: false },
@@ -95,7 +85,6 @@ export const ListFeature: FC = () => {
 
   return (
     <>
-      <h1 className={styles.notesTitle}>Notes</h1>
       <div className={styles.wrap}>
         <NoteView
           noteViewItem={noteViewList[1]}

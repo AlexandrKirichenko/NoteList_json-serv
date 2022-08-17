@@ -1,11 +1,20 @@
 import { FC, ReactNode, useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import IconButton from '@mui/material/IconButton';
+// import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
+
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+
+import RemoveIcon from '@mui/icons-material/Remove';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { NoteViewItem, NoteViewList } from '../types';
-import { UpIcon } from './Icon';
-import styles from './NoteView.module.scss';
-import { NoteEditForm } from './NoteEditForm';
 import { NoteEditFormValues } from './types';
-import { Button } from './Button';
+import { NoteEditForm } from './NoteEditForm';
+import styles from './NoteView.module.scss';
+import { positions } from '@mui/system';
+import { UpIcon } from './Icon';
 
 interface NoteViewProps {
   noteViewItem: NoteViewItem;
@@ -37,8 +46,9 @@ export const NoteView: FC<NoteViewProps> = ({
   onDeleteItem,
   onDeleteSublist,
 }) => {
-  const [noteEditFormInitialState, setNoteEditFormInitialState] =
-    useState<NoteEditFormValues>({ ...NOTE_EDIT_FORM_INITIAL_STATE });
+  const [noteEditFormInitialState, setNoteEditFormInitialState] = useState<NoteEditFormValues>({
+      ...NOTE_EDIT_FORM_INITIAL_STATE,
+  });
 
   const handleFormSubmit = (values: NoteEditFormValues) => {
     setNoteEditFormInitialState((prev) => ({
@@ -65,13 +75,18 @@ export const NoteView: FC<NoteViewProps> = ({
         <div className={styles.itemTitle}>{noteViewItem.title}</div>
         {isEnableDeleteItem && (
           <div>
-            <Button onClick={onDeleteItem} id={id}>
-              Remove{' '}
-            </Button>
+            <IconButton onClick={() => onDeleteItem(id)} id={id} aria-label="delete" size="large">
+              <RemoveIcon fontSize="inherit" />
+            </IconButton>
             {noteViewItem.isEnableSubList && (
-              <Button onClick={onDeleteSublist} id={id}>
-                Remove Sublist
-              </Button>
+              <IconButton
+                onClick={() => onDeleteSublist(id)}
+                id={id}
+                aria-label="delete"
+                size="large"
+              >
+                <PlaylistRemoveIcon fontSize="inherit" />
+              </IconButton>
             )}
           </div>
         )}
@@ -89,10 +104,9 @@ export const NoteView: FC<NoteViewProps> = ({
               />
             </>
           ) : (
-            <Button onClick={onAddSublist} id={id}>
-              {' '}
-              Add Sublist
-            </Button>
+            <IconButton onClick={() => onAddSublist(id)} id={id} aria-label="add" size="large">
+              <PlaylistAddIcon fontSize="inherit" />
+            </IconButton>
           )}
         </div>
         <div>
@@ -110,30 +124,37 @@ export const NoteView: FC<NoteViewProps> = ({
               onDeleteSublist={onDeleteSublist}
             >
               {index > 0 && (
-                <div
-                  className={styles.buttonDown}
-                  onClick={() =>
-                    onChangeOrder(
-                      childListView[index],
-                      childListView[index - 1],
-                    )
-                  }
+                <IconButton
+                  onClick={() => onChangeOrder(childListView[index], childListView[index - 1])}
+                  id={id}
+                  aria-label="delete"
+                  size="large"
                 >
-                  <UpIcon Icon={RiArrowUpSLine} />
-                </div>
+                  <ArrowDropUpIcon fontSize="inherit" />
+                </IconButton>
               )}
               {index < childListView.length - 1 && (
-                <div
-                  className={styles.buttonUp}
-                  onClick={() =>
-                    onChangeOrder(
-                      childListView[index + 1],
-                      childListView[index],
-                    )
-                  }
+                // <div
+                //   className={styles.buttonUp}
+                //   onClick={() =>
+                //     onChangeOrder(
+                //       childListView[index + 1],
+                //       childListView[index],
+                //     )
+                //   }
+                // >
+                //   <UpIcon Icon={RiArrowDownSLine} />
+                // </div>
+                <IconButton
+                  // sx={{ zIndex: 'top' }}
+                  // position="absolute"
+                  onClick={() => onChangeOrder(childListView[index], childListView[index - 1])}
+                  id={id}
+                  aria-label="delete"
+                  size="large"
                 >
-                  <UpIcon Icon={RiArrowDownSLine} />
-                </div>
+                  <ArrowDropDownIcon fontSize="inherit" />
+                </IconButton>
               )}
             </NoteView>
           ))}
