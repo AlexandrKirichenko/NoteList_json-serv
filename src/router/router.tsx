@@ -29,7 +29,7 @@ export const Router: FC = () => {
               <Route
                 path={route.path}
                 key={routeName}
-                element={<Navigate to={getRoutePath('HomePage')} />}
+                element={<Navigate to={getRoutePath('ListFeaturePage')} />}
               />
             );
           }

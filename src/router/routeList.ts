@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { HomeMainForm } from '../features/HomeMainForm';
 import { P404page } from '../pages/P404page';
 import { LoginPage } from '../pages/LoginPage';
+import { ListFeaturePage } from '../pages/ListFeaturePage';
 
 interface RouteItem {
   path: string;
@@ -10,14 +10,14 @@ interface RouteItem {
   isNotInPrivate: boolean;
 }
 
-export const routeNameList = ['HomePage', 'LoginPage', 'Page404'] as const;
+export const routeNameList = ['ListFeaturePage', 'LoginPage', 'Page404'] as const;
 
 export type Routes = typeof routeNameList[number];
 
 export const routeList: Record<Routes, RouteItem> = {
-  HomePage: {
+  ListFeaturePage: {
     path: '/',
-    component: HomeMainForm,
+    component: ListFeaturePage,
     isPrivate: true,
     isNotInPrivate: false,
   },
