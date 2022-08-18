@@ -15,10 +15,14 @@ import Switch from '@mui/material/Switch';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { useAppDispatch } from '../store/hooks';
+import { authSlice } from '../store/auth';
 
 export default function Header() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const dispatch = useAppDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -30,6 +34,10 @@ export default function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    dispatch(authSlice.actions.setIsAuth(false));
   };
 
   return (
@@ -80,7 +88,7 @@ export default function Header() {
                 label={
                   auth ? (
                     <Grid item>
-                      <Link href="/" variant="body2">
+                      <Link href="/" variant="body2" component={'button'} onClick={handleLogout}>
                         Logout
                       </Link>
                     </Grid>
