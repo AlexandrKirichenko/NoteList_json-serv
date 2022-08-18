@@ -4,10 +4,10 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 // import AddIcon from '@mui/icons-material/Add';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import TextField from '@mui/material/TextField';
 import { Button } from '../Button';
 import { NoteEditFormValues } from '../types';
 import styles from './NoteEditForm.module.scss';
-import TextField from '@mui/material/TextField';
 
 interface NoteEditFormProps {
   initialValues: NoteEditFormValues;

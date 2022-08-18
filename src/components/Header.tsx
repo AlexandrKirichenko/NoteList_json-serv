@@ -74,7 +74,9 @@ export default function Header() {
           {auth && (
             <FormGroup>
               <FormControlLabel
-                control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
+                control={
+                  <Switch checked={auth} onChange={handleChange} aria-label="login switch" />
+                }
                 label={
                   auth ? (
                     <Grid item>
@@ -87,8 +89,8 @@ export default function Header() {
                   )
                 }
               />
-            </FormGroup>)
-          }
+            </FormGroup>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

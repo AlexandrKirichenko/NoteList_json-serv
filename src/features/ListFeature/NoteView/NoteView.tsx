@@ -1,4 +1,4 @@
-import Typography from "@mui/material/Typography";
+import Typography from '@mui/material/Typography';
 import React, { FC, ReactNode, useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import IconButton from '@mui/material/IconButton';
