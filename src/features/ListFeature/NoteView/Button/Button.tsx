@@ -10,10 +10,7 @@ interface ButtonProps {
 
 export const Button: React.FC<ButtonProps> = ({ children, onClick, id }) => {
   return (
-    <button
-      className={styles.button}
-      onClick={() => (onClick ? onClick(id) : null)}
-    >
+    <button className={styles.button} onClick={() => (onClick ? onClick(id) : null)}>
       {children}
     </button>
   );

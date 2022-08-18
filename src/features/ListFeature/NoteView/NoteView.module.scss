@@ -1,6 +1,7 @@
 .wrapper {
-  display: flex;
+  //display: flex;
   justify-content: flex-start;
+  min-width: 500px;
   gap: 2px;
   //border: 1px solid #bec7ec;
   border-radius: 7px;
@@ -10,9 +11,9 @@
   position: relative;
 }
 
-.itemTitle {
-  font-size: 1em;
-}
+//.itemTitle {
+//  font-size: 1em;
+//}
 
 .listItemWrap {
   display: flex;

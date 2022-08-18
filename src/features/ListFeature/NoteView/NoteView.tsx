@@ -1,19 +1,25 @@
-import { FC, ReactNode, useState } from 'react';
+import Typography from "@mui/material/Typography";
+import React, { FC, ReactNode, useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import IconButton from '@mui/material/IconButton';
 // import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-
+// import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
+// import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { positions } from '@mui/system';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { NoteViewItem, NoteViewList } from '../types';
 import { NoteEditFormValues } from './types';
 import { NoteEditForm } from './NoteEditForm';
 import styles from './NoteView.module.scss';
-import { positions } from '@mui/system';
 import { UpIcon } from './Icon';
 
 interface NoteViewProps {
@@ -47,7 +53,7 @@ export const NoteView: FC<NoteViewProps> = ({
   onDeleteSublist,
 }) => {
   const [noteEditFormInitialState, setNoteEditFormInitialState] = useState<NoteEditFormValues>({
-      ...NOTE_EDIT_FORM_INITIAL_STATE,
+    ...NOTE_EDIT_FORM_INITIAL_STATE,
   });
 
   const handleFormSubmit = (values: NoteEditFormValues) => {
@@ -72,11 +78,14 @@ export const NoteView: FC<NoteViewProps> = ({
   return (
     <ul className={styles.wrapper}>
       <li className={styles.listItemWrap}>
-        <div className={styles.itemTitle}>{noteViewItem.title}</div>
+        {/*<div className={styles.itemTitle}>{noteViewItem.title}</div>*/}
+        <Typography variant="h4" component="h4" sx={{ fontSize: 24 }}>
+          {noteViewItem.title}
+        </Typography>
         {isEnableDeleteItem && (
           <div>
             <IconButton onClick={() => onDeleteItem(id)} id={id} aria-label="delete" size="large">
-              <RemoveIcon fontSize="inherit" />
+              <DeleteIcon sx={{ fontSize: 36 }} />
             </IconButton>
             {noteViewItem.isEnableSubList && (
               <IconButton
@@ -85,7 +94,7 @@ export const NoteView: FC<NoteViewProps> = ({
                 aria-label="delete"
                 size="large"
               >
-                <PlaylistRemoveIcon fontSize="inherit" />
+                <FolderDeleteIcon sx={{ fontSize: 36 }} />
               </IconButton>
             )}
           </div>
@@ -105,7 +114,7 @@ export const NoteView: FC<NoteViewProps> = ({
             </>
           ) : (
             <IconButton onClick={() => onAddSublist(id)} id={id} aria-label="add" size="large">
-              <PlaylistAddIcon fontSize="inherit" />
+              <CreateNewFolderIcon sx={{ fontSize: 36 }} />
             </IconButton>
           )}
         </div>
@@ -130,7 +139,7 @@ export const NoteView: FC<NoteViewProps> = ({
                   aria-label="delete"
                   size="large"
                 >
-                  <ArrowDropUpIcon fontSize="inherit" />
+                  <KeyboardArrowUpIcon sx={{ fontSize: 36 }} />
                 </IconButton>
               )}
               {index < childListView.length - 1 && (
@@ -153,7 +162,7 @@ export const NoteView: FC<NoteViewProps> = ({
                   aria-label="delete"
                   size="large"
                 >
-                  <ArrowDropDownIcon fontSize="inherit" />
+                  <KeyboardArrowDownIcon sx={{ fontSize: 36 }} />
                 </IconButton>
               )}
             </NoteView>

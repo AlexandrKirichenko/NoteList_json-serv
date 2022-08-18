@@ -1,3 +1,5 @@
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -33,19 +35,7 @@ export default function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h4" component="h4" sx={{ flexGrow: 1 }}>
-            Notes
-          </Typography>
-          <FormGroup>
-            <FormControlLabel
-              control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
-              label={auth ? 'Logout' : 'Login'}
-            />
-          </FormGroup>
+        <Toolbar sx={{ bgcolor: 'primary.light' }}>
           {auth && (
             <div>
               <IconButton
@@ -78,6 +68,27 @@ export default function Header() {
               </Menu>
             </div>
           )}
+          <Typography variant="h4" component="h4" sx={{ flexGrow: 1, alignItems: 'center' }}>
+            Notes
+          </Typography>
+          {auth && (
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />}
+                label={
+                  auth ? (
+                    <Grid item>
+                      <Link href="/" variant="body2">
+                        Logout
+                      </Link>
+                    </Grid>
+                  ) : (
+                    'Login'
+                  )
+                }
+              />
+            </FormGroup>)
+          }
         </Toolbar>
       </AppBar>
     </Box>

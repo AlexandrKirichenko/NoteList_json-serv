@@ -85,7 +85,7 @@ export const ListFeature: FC = () => {
 
   return (
     <>
-      <div className={styles.wrap}>
+      <div>
         <NoteView
           noteViewItem={noteViewList[1]}
           noteViewList={noteViewList}
