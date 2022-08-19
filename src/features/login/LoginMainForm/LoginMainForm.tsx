@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Container from '@mui/material/Container';
@@ -18,6 +18,8 @@ import * as React from 'react';
 import { authSlice } from '../../../store/auth';
 import { useAppDispatch } from '../../../store/hooks';
 import { LoginCredentials } from '../types';
+import { appSlice } from '../../../store/app';
+import { getRoutePath } from '../../../router';
 
 const theme = createTheme();
 
@@ -41,6 +43,11 @@ export const LoginMainForm: FC = () => {
       dispatch(authSlice.thunks.loginThunk(values));
     },
   });
+
+  const handleGoToSignUp = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    dispatch(appSlice.actions.redirect(getRoutePath('SignUpPage')));
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,7 +107,7 @@ export const LoginMainForm: FC = () => {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/singup" variant="body2">
+                <Link href="/singup" variant="body2" onClick={handleGoToSignUp}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
