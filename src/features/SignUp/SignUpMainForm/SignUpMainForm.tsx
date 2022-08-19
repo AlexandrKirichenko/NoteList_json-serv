@@ -24,10 +24,10 @@ import { authSlice } from '../../../store/auth';
 const theme = createTheme();
 
 const INITIAL_VALUES: SignUpData = {
-  email: 't@t.ru',
-  password: 'asdasdasdasd',
-  firstName: 'xxx',
-  lastName: 'yyy',
+  email: '',
+  password: '',
+  firstName: '',
+  lastName: '',
 };
 
 const VALIDATION_SCHEMA = yup.object({
@@ -48,6 +48,7 @@ export const SignUpMainForm: FC = () => {
     onSubmit: (values) => {
       const successCb = () => {
         alert('вы успешно зарегистрировали пользователя!');
+        dispatch(appSlice.actions.redirect(getRoutePath('LoginPage')));
       };
 
       dispatch(authSlice.thunks.singUpThunk({ signUpData: values, successCb }));

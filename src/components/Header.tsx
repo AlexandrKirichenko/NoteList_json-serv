@@ -15,7 +15,7 @@ import Switch from '@mui/material/Switch';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authSlice } from '../store/auth';
 
 export default function Header() {
@@ -23,6 +23,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const dispatch = useAppDispatch();
+  const isAuth = useAppSelector(authSlice.selectors.getIsAuth);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -79,14 +80,14 @@ export default function Header() {
           <Typography variant="h4" component="h4" sx={{ flexGrow: 1, alignItems: 'center' }}>
             Notes
           </Typography>
-          {auth && (
+          {isAuth && (
             <FormGroup>
               <FormControlLabel
                 control={
                   <Switch checked={auth} onChange={handleChange} aria-label="login switch" />
                 }
                 label={
-                  auth ? (
+                  isAuth ? (
                     <Grid item>
                       <Link href="/" variant="body2" component={'button'} onClick={handleLogout}>
                         Logout
