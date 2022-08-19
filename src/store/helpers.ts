@@ -2,10 +2,14 @@ import { AxiosError } from 'axios';
 import { ActionReducerMapBuilder, AsyncThunk } from '@reduxjs/toolkit';
 import { RequestError, RequestSliceStateProperty } from './types';
 
-export const getRequestErrorData = (e: unknown): RequestError => ({
-  responseData: (e as AxiosError)?.response || null,
-  errorMsg: (e as Error)?.message,
-});
+export const getRequestErrorData = (e: unknown, payload: unknown): RequestError => {
+  const payloadMsg = String(payload);
+  console.log(3333, payload);
+  return {
+    responseData: (e as AxiosError)?.response || null,
+    errorMsg: payload ? payloadMsg : (e as Error)?.message,
+  };
+};
 
 export const makeRequestSliceStateProperty = <T>(
   initialValues: Partial<RequestSliceStateProperty<T>> = {},
@@ -30,9 +34,10 @@ export const makeRequestCaseToBuilder = <IS>(
       state[requestPropertyName].isLoading = false;
       state[requestPropertyName].data = action.payload;
     })
-    .addCase(asyncThunk.rejected, (state, { error }) => {
+    .addCase(asyncThunk.rejected, (state, { error, payload }) => {
+      console.log(222, error, payload);
       state[requestPropertyName].isLoading = false;
       state[requestPropertyName].data = null;
-      state[requestPropertyName].error = getRequestErrorData(error);
+      state[requestPropertyName].error = getRequestErrorData(error, payload);
     });
 };

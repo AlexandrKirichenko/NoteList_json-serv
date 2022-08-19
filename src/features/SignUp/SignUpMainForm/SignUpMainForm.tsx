@@ -17,7 +17,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { appSlice } from '../../../store/app';
 import { getRoutePath } from '../../../router';
-import { useAppDispatch } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { SignUpData } from '../types';
 import { authSlice } from '../../../store/auth';
 
@@ -40,12 +40,17 @@ const VALIDATION_SCHEMA = yup.object({
 export const SignUpMainForm: FC = () => {
   const dispatch = useAppDispatch();
 
+  const signUpRequest = useAppSelector(authSlice.selectors.getSignUpRequest);
+
   const formik = useFormik<SignUpData>({
     initialValues: INITIAL_VALUES,
     validationSchema: VALIDATION_SCHEMA,
     onSubmit: (values) => {
-      // dispatch(authSlice.thunks.loginThunk(values));
-      console.log(values);
+      const successCb = () => {
+        alert('вы успешно зарегистрировали пользователя!');
+      };
+
+      dispatch(authSlice.thunks.singUpThunk({ signUpData: values, successCb }));
     },
   });
 
@@ -73,6 +78,9 @@ export const SignUpMainForm: FC = () => {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
+
+            {signUpRequest.error && <div>ERROR REQUEST: {signUpRequest.error.errorMsg}</div>}
+
             <Box
               component="form"
               noValidate
@@ -139,12 +147,12 @@ export const SignUpMainForm: FC = () => {
                   ) : null}
                 </Grid>
 
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                    label="I want to receive inspiration, marketing promotions and updates via email."
-                  />
-                </Grid>
+                {/*<Grid item xs={12}>*/}
+                {/*  <FormControlLabel*/}
+                {/*    control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
+                {/*    label="I want to receive inspiration, marketing promotions and updates via email."*/}
+                {/*  />*/}
+                {/*</Grid>*/}
               </Grid>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Sign Up

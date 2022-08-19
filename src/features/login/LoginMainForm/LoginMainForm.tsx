@@ -16,7 +16,7 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
 import { authSlice } from '../../../store/auth';
-import { useAppDispatch } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { LoginCredentials } from '../types';
 import { appSlice } from '../../../store/app';
 import { getRoutePath } from '../../../router';
@@ -35,6 +35,8 @@ const VALIDATION_SCHEMA = yup.object({
 
 export const LoginMainForm: FC = () => {
   const dispatch = useAppDispatch();
+
+  const loginRequest = useAppSelector(authSlice.selectors.getLoginRequest);
 
   const formik = useFormik<LoginCredentials>({
     initialValues: INITIAL_VALUES,
@@ -67,6 +69,7 @@ export const LoginMainForm: FC = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {loginRequest.error && <div>ERROR REQUEST: {loginRequest.error.errorMsg}</div>}
           <Box
             component="form"
             noValidate
@@ -98,10 +101,10 @@ export const LoginMainForm: FC = () => {
             {Boolean(formik.touched.password) && Boolean(formik.errors.password) ? (
               <div className="msg-error">{formik.errors.password}</div>
             ) : null}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            {/*<FormControlLabel*/}
+            {/*  control={<Checkbox value="remember" color="primary" />}*/}
+            {/*  label="Remember me"*/}
+            {/*/>*/}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>

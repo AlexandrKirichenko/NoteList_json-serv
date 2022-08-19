@@ -7,13 +7,15 @@ import * as thunks from './thunks';
 interface InitialState {
   test: boolean;
   isAuth: boolean;
-  loginRequest: RequestSliceStateProperty<any>;
+  loginRequest: RequestSliceStateProperty<unknown>;
+  signUpRequest: RequestSliceStateProperty<unknown>;
 }
 
 const initialState: InitialState = {
   test: true,
   isAuth: false,
-  loginRequest: makeRequestSliceStateProperty<any>(),
+  loginRequest: makeRequestSliceStateProperty<unknown>(),
+  signUpRequest: makeRequestSliceStateProperty<unknown>(),
 };
 
 export const { actions, reducer } = createSlice({
@@ -26,5 +28,6 @@ export const { actions, reducer } = createSlice({
   },
   extraReducers: (builder) => {
     makeRequestCaseToBuilder<InitialState>(builder, thunks.loginThunk, 'loginRequest');
+    makeRequestCaseToBuilder<InitialState>(builder, thunks.singUpThunk, 'signUpRequest');
   },
 });

@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { LoginCredentials } from '../features/login/types';
+import { SignUpData } from '../features/SignUp/types';
 import { requestExecutorCreator } from './helpers';
 import { API_DEFAULT_REQUEST_HEADERS, BASE_URL, LS_TOKEN_KEY_NAME } from './config';
 
@@ -10,7 +11,7 @@ interface LoginResponse {
   user: { email: string; id: number };
 }
 
-export const login = async (credentials: LoginCredentials): Promise<any> => {
+export const login = async (credentials: LoginCredentials): Promise<unknown> => {
   const axiosRequestConfig: AxiosRequestConfig = {
     url: '/login',
     data: credentials,
@@ -22,4 +23,16 @@ export const login = async (credentials: LoginCredentials): Promise<any> => {
   localStorage.setItem(LS_TOKEN_KEY_NAME, response.data.accessToken);
 
   return response.data.user;
+};
+
+export const signUp = async (signUpData: SignUpData): Promise<unknown> => {
+  const axiosRequestConfig: AxiosRequestConfig = {
+    url: '/register',
+    data: signUpData,
+    method: 'post',
+  };
+
+  const response = await requestExecutor<unknown>(axiosRequestConfig);
+
+  return response.data;
 };
