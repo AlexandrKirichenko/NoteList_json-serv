@@ -1,7 +1,9 @@
 .wrap {
   display: flex;
-  align-items: center;
+  justify-content: center;
+  //align-items: center;
   gap: 0.5em;
+  max-height: 48px;
 }
 
 .input {

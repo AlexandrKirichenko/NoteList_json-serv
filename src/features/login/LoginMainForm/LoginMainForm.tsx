@@ -99,12 +99,8 @@ export const LoginMainForm: FC = () => {
               {...formik.getFieldProps('password')}
             />
             {Boolean(formik.touched.password) && Boolean(formik.errors.password) ? (
-              <div className="msg-error">{formik.errors.password}</div>
+              <div>{formik.errors.password}</div>
             ) : null}
-            {/*<FormControlLabel*/}
-            {/*  control={<Checkbox value="remember" color="primary" />}*/}
-            {/*  label="Remember me"*/}
-            {/*/>*/}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>

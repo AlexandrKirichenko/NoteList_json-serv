@@ -15,6 +15,7 @@ import Switch from '@mui/material/Switch';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { shadows } from '@mui/system';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { authSlice } from '../store/auth';
 
@@ -42,9 +43,9 @@ export default function Header() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, boxShadow: 0 }}>
       <AppBar position="static">
-        <Toolbar sx={{ bgcolor: 'primary.light' }}>
+        <Toolbar sx={{ bgcolor: '#DFEAFFFF' }}>
           {auth && (
             <div>
               <IconButton
