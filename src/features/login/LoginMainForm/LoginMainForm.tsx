@@ -24,8 +24,8 @@ import { getRoutePath } from '../../../router';
 const theme = createTheme();
 
 const INITIAL_VALUES: LoginCredentials = {
-  email: '',
-  password: '',
+  email: 'ddd@ddd.ru',
+  password: '123456',
 };
 
 const VALIDATION_SCHEMA = yup.object({

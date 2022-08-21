@@ -1,86 +1,68 @@
-import React, { FC, useEffect, useState } from 'react';
-import { getUnicId } from '../../utils/getUnicId';
-import styles from './ListFeature.module.scss';
-import { NoteItem, NoteList } from './types';
-import { deleteItemFromNodeList, getNoteViewList } from './helpers';
+import React, { FC, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { NoteItem } from './types';
+import { getNoteViewList } from './helpers';
 import { NoteView } from './NoteView';
-
-const LS_KEY_MAX_ORDER = 'LS_KEY_MAX_ORDER';
-const LS_KEY_NOTE_LIST = 'LS_KEY_NOTE_LIST';
+import { notesSlice } from './slice';
 
 export const ListFeature: FC = () => {
-  const [noteList, setNoteList] = useState<NoteList>(() => {
-    const noteListStr: string | null = localStorage.getItem(LS_KEY_NOTE_LIST);
-    if (noteListStr === null) {
-      return {
-        1: { parentId: null, title: '', isEnableSubList: false, order: 1 },
-      };
-    }
-    return JSON.parse(noteListStr);
-  });
-
-  const [maxOrder, setMaxOrder] = useState<number>(() => {
-    const maxOrderStr: string | null = localStorage.getItem(LS_KEY_MAX_ORDER);
-    if (maxOrderStr === null) {
-      return 1;
-    }
-    return JSON.parse(maxOrderStr);
-  });
+  const dispatch = useAppDispatch();
+  const noteListRequest = useAppSelector(notesSlice.selectors.getNoteList);
 
   useEffect(() => {
-    localStorage.setItem(LS_KEY_MAX_ORDER, JSON.stringify(maxOrder));
-  }, [maxOrder]);
+    dispatch(notesSlice.thunks.fetchNoteListThunk());
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem(LS_KEY_NOTE_LIST, JSON.stringify(noteList));
-  }, [noteList]);
-
-  const noteViewList = getNoteViewList(noteList);
+  if (noteListRequest.data === null) {
+    return null;
+  }
+  const noteViewList = getNoteViewList(noteListRequest.data);
 
   const handleAddItem = (parentId: string, title: string) => {
-    const newId = getUnicId();
-
-    const newMaxOrder = maxOrder + 1;
-
-    setMaxOrder(newMaxOrder);
-
-    const newNoteItem: NoteItem = {
+    const noteItem: NoteItem = {
       parentId,
       title,
-      order: newMaxOrder,
+      order: 111,
       isEnableSubList: false,
     };
-    setNoteList((prevState) => ({ ...prevState, [newId]: newNoteItem }));
+
+    dispatch(notesSlice.thunks.addNoteItemThunk(noteItem));
   };
 
   const handleAddSubList = (id: string) => {
-    setNoteList((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], isEnableSubList: true },
-    }));
+    if (noteListRequest.data) {
+      const currentNoteItem = noteListRequest.data[id];
+      if (currentNoteItem) {
+        const noteItem: NoteItem = {
+          ...currentNoteItem,
+          isEnableSubList: true,
+        };
+        dispatch(notesSlice.thunks.patchNoteItemThunk({ noteItem, id }));
+      }
+    }
   };
 
   const handleChangeOrder = (idA: string, idB: string) => {
-    const orderA = noteList[idA].order;
-    const orderB = noteList[idB].order;
-    setNoteList((prev) => ({
-      ...prev,
-      [idA]: { ...noteList[idA], order: orderB },
-      [idB]: { ...noteList[idB], order: orderA },
-    }));
+    // const orderA = noteList[idA].order;
+    // const orderB = noteList[idB].order;
+    // setNoteList((prev) => ({
+    //   ...prev,
+    //   [idA]: { ...noteList[idA], order: orderB },
+    //   [idB]: { ...noteList[idB], order: orderA },
+    // }));
   };
 
   const handleDeleteItem = (id: string) => {
-    const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, true);
-    setNoteList(newNodeList);
+    // const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, true);
+    // setNoteList(newNodeList);
   };
 
   const handleDeleteSublist = (id: string) => {
-    const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, false);
-    setNoteList({
-      ...newNodeList,
-      [id]: { ...noteList[id], isEnableSubList: false },
-    });
+    // const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, false);
+    // setNoteList({
+    //   ...newNodeList,
+    //   [id]: { ...noteList[id], isEnableSubList: false },
+    // });
   };
 
   return (
