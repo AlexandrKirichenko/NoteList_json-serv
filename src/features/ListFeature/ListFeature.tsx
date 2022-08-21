@@ -7,7 +7,7 @@ import { notesSlice } from './slice';
 
 export const ListFeature: FC = () => {
   const dispatch = useAppDispatch();
-  const noteListRequest = useAppSelector(notesSlice.selectors.getNoteList);
+  const noteListRequest = useAppSelector(notesSlice.selectors.getFetchNoteListRequest);
 
   useEffect(() => {
     dispatch(notesSlice.thunks.fetchNoteListThunk());
