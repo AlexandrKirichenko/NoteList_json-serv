@@ -9,15 +9,23 @@ interface NoteServerItem extends NoteItem {
   id: string;
 }
 
-export const fetchNoteList = async (): Promise<NoteList> => {
+export const fetchNoteList = async (userId: number): Promise<NoteList> => {
   const axiosRequestConfig: AxiosRequestConfig = {
-    url: '/notes',
+    url: `/user/${userId}/notes`,
     method: 'get',
   };
 
   const response = await requestExecutor<NoteServerItem[]>(axiosRequestConfig);
 
-  const noteDataList: NoteList = {};
+  const noteDataList: NoteList = {
+    //добавляем корневой элемент
+    0: {
+      parentId: null,
+      title: '',
+      isEnableSubList: true,
+      order: 1,
+    },
+  };
 
   response.data.forEach((fetchNoteListResponseItem) => {
     const { id, ...data } = fetchNoteListResponseItem;
@@ -27,9 +35,9 @@ export const fetchNoteList = async (): Promise<NoteList> => {
   return noteDataList;
 };
 
-export const addNoteItem = async (noteItem: NoteItem): Promise<unknown> => {
+export const addNoteItem = async (noteItem: NoteItem, userId: number): Promise<unknown> => {
   const axiosRequestConfig: AxiosRequestConfig = {
-    url: `/notes`,
+    url: `/user/${userId}/notes`,
     method: 'post',
     data: noteItem,
   };

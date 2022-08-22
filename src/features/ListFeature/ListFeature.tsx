@@ -69,10 +69,10 @@ export const ListFeature: FC = () => {
     <>
       <div>
         <NoteView
-          noteViewItem={noteViewList[1]}
+          noteViewItem={noteViewList[0]}
           noteViewList={noteViewList}
           onAddItem={handleAddItem}
-          id={'1'}
+          id={'0'}
           onAddSublist={handleAddSubList}
           onChangeOrder={handleChangeOrder}
           isEnableDeleteItem={false}
