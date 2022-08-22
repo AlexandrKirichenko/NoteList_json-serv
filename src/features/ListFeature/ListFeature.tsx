@@ -22,7 +22,7 @@ export const ListFeature: FC = () => {
     const noteItem: NoteItem = {
       parentId,
       title,
-      order: 111,
+      order: 0,
       isEnableSubList: false,
     };
 
