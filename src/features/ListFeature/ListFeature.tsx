@@ -22,7 +22,7 @@ export const ListFeature: FC = () => {
     const noteItem: NoteItem = {
       parentId,
       title,
-      order: 0,
+      order: new Date().getTime(),
       isEnableSubList: false,
     };
 
@@ -50,6 +50,9 @@ export const ListFeature: FC = () => {
     //   [idA]: { ...noteList[idA], order: orderB },
     //   [idB]: { ...noteList[idB], order: orderA },
     // }));
+    console.log(idA, idB);
+
+    dispatch(notesSlice.thunks.changeOrderThunk({ idA, idB }));
   };
 
   const handleDeleteItem = (id: string) => {

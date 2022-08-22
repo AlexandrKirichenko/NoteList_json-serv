@@ -4,15 +4,21 @@ import { NoteItem } from '../types';
 import { RootState } from '../../../store/types';
 import { authSlice } from '../../../store/auth';
 import { SLICE_NAME } from './types';
+import { notesSlice } from './index';
+
+const getUserId = (getState: () => unknown): number => {
+  const loginRequest = authSlice.selectors.getLoginRequest(getState() as RootState);
+  let userId = 0;
+  if (loginRequest.data?.id) {
+    userId = loginRequest.data.id;
+  }
+  return userId;
+};
 
 export const fetchNoteListThunk = createAsyncThunk(
   `${SLICE_NAME}/fetchNoteThunks`,
   async (_, { getState }) => {
-    const loginRequest = authSlice.selectors.getLoginRequest(getState() as RootState);
-    let userId = 0;
-    if (loginRequest.data?.id) {
-      userId = loginRequest.data.id;
-    }
+    const userId = getUserId(getState);
 
     return api.notes.fetchNoteList(userId);
   },
@@ -21,11 +27,7 @@ export const fetchNoteListThunk = createAsyncThunk(
 export const addNoteItemThunk = createAsyncThunk(
   `${SLICE_NAME}/addNoteItemThunk`,
   async (noteItem: NoteItem, { dispatch, getState }) => {
-    const loginRequest = authSlice.selectors.getLoginRequest(getState() as RootState);
-    let userId = 0;
-    if (loginRequest.data?.id) {
-      userId = loginRequest.data.id;
-    }
+    const userId = getUserId(getState);
     const response = await api.notes.addNoteItem(noteItem, userId);
     dispatch(fetchNoteListThunk());
     return response;
@@ -40,11 +42,7 @@ interface PatchNoteItemThunk {
 export const patchNoteItemThunk = createAsyncThunk(
   `${SLICE_NAME}/patchNoteItemThunk`,
   async ({ noteItem, id }: PatchNoteItemThunk, { dispatch, getState }) => {
-    const loginRequest = authSlice.selectors.getLoginRequest(getState() as RootState);
-    let userId = 0;
-    if (loginRequest.data?.id) {
-      userId = loginRequest.data.id;
-    }
+    const userId = getUserId(getState);
     const response = await api.notes.patchNoteItem(noteItem, id, userId);
     dispatch(fetchNoteListThunk());
 
@@ -58,5 +56,33 @@ export const deleteNodeListThunk = createAsyncThunk(
     const response = await api.notes.deleteNodeList(nodeItemIdList);
     dispatch(fetchNoteListThunk());
     return response;
+  },
+);
+
+interface ChangeOrderThunkPayload {
+  idA: string;
+  idB: string;
+}
+
+export const changeOrderThunk = createAsyncThunk(
+  `${SLICE_NAME}/changeOrderThunk`,
+  async ({ idA, idB }: ChangeOrderThunkPayload, { dispatch, getState }) => {
+    const userId = getUserId(getState);
+
+    const noteList = notesSlice.selectors.getFetchNoteListRequest(getState() as RootState).data;
+
+    if (noteList) {
+      const currentA = noteList[idA];
+      const currentB = noteList[idB];
+      if (currentA && currentB) {
+        const newA: NoteItem = { ...currentA, order: currentB.order };
+        const newB: NoteItem = { ...currentB, order: currentA.order };
+
+        await api.notes.patchNoteItem(newA, idA, userId);
+        await api.notes.patchNoteItem(newB, idB, userId);
+
+        dispatch(fetchNoteListThunk());
+      }
+    }
   },
 );
