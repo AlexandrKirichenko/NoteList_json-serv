@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { NoteItem } from './types';
-import { getNoteViewList } from './helpers';
+import { getDeleteItemIdListFromNodeList, getNoteViewList } from './helpers';
 import { NoteView } from './NoteView';
 import { notesSlice } from './slice';
 
@@ -53,16 +53,29 @@ export const ListFeature: FC = () => {
   };
 
   const handleDeleteItem = (id: string) => {
-    // const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, true);
-    // setNoteList(newNodeList);
+    if (noteListRequest.data) {
+      const deleteItemIdListFromNodeList = getDeleteItemIdListFromNodeList(
+        id,
+        noteListRequest.data,
+        noteViewList,
+        true,
+      );
+
+      console.log(deleteItemIdListFromNodeList);
+    }
   };
 
   const handleDeleteSublist = (id: string) => {
-    // const newNodeList = deleteItemFromNodeList(id, noteList, noteViewList, false);
-    // setNoteList({
-    //   ...newNodeList,
-    //   [id]: { ...noteList[id], isEnableSubList: false },
-    // });
+    if (noteListRequest.data) {
+      const deleteItemIdListFromNodeList = getDeleteItemIdListFromNodeList(
+        id,
+        noteListRequest.data,
+        noteViewList,
+        false,
+      );
+
+      console.log(deleteItemIdListFromNodeList);
+    }
   };
 
   return (
