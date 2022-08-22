@@ -43,15 +43,6 @@ export const ListFeature: FC = () => {
   };
 
   const handleChangeOrder = (idA: string, idB: string) => {
-    // const orderA = noteList[idA].order;
-    // const orderB = noteList[idB].order;
-    // setNoteList((prev) => ({
-    //   ...prev,
-    //   [idA]: { ...noteList[idA], order: orderB },
-    //   [idB]: { ...noteList[idB], order: orderA },
-    // }));
-    console.log(idA, idB);
-
     dispatch(notesSlice.thunks.changeOrderThunk({ idA, idB }));
   };
 
