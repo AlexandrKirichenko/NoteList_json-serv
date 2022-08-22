@@ -39,8 +39,13 @@ interface PatchNoteItemThunk {
 
 export const patchNoteItemThunk = createAsyncThunk(
   `${SLICE_NAME}/patchNoteItemThunk`,
-  async ({ noteItem, id }: PatchNoteItemThunk, { dispatch }) => {
-    const response = await api.notes.patchNoteItem(noteItem, id);
+  async ({ noteItem, id }: PatchNoteItemThunk, { dispatch, getState }) => {
+    const loginRequest = authSlice.selectors.getLoginRequest(getState() as RootState);
+    let userId = 0;
+    if (loginRequest.data?.id) {
+      userId = loginRequest.data.id;
+    }
+    const response = await api.notes.patchNoteItem(noteItem, id, userId);
     dispatch(fetchNoteListThunk());
 
     return response;

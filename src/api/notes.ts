@@ -47,11 +47,15 @@ export const addNoteItem = async (noteItem: NoteItem, userId: number): Promise<u
   return response.data;
 };
 
-export const patchNoteItem = async (noteItem: NoteItem, id: string): Promise<unknown> => {
+export const patchNoteItem = async (
+  noteItem: NoteItem,
+  id: string,
+  userId: number,
+): Promise<unknown> => {
   const axiosRequestConfig: AxiosRequestConfig = {
     url: `/notes/${id}`,
     method: 'put',
-    data: noteItem,
+    data: { ...noteItem, userId },
   };
   const response = await requestExecutor<unknown>(axiosRequestConfig);
 
