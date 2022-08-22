@@ -11,7 +11,7 @@ export const requestExecutorCreator =
     };
 
     if (isAuth) {
-      headers.Authorization = `${localStorage.getItem(LS_TOKEN_KEY_NAME)}`;
+      headers.Authorization = `Bearer ${localStorage.getItem(LS_TOKEN_KEY_NAME)}`;
     }
 
     const finalRequestConfig: AxiosRequestConfig = {
