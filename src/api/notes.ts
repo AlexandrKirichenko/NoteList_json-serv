@@ -61,3 +61,18 @@ export const patchNoteItem = async (
 
   return response.data;
 };
+
+export const deleteNodeList = async (nodeItemIdList: string[]): Promise<void> => {
+  for (let i = 0; i < nodeItemIdList.length; i++) {
+    const nodeItemId = nodeItemIdList[i];
+
+    if (nodeItemId) {
+      const axiosRequestConfig: AxiosRequestConfig = {
+        url: `/notes/${nodeItemId}`,
+        method: 'delete',
+      };
+
+      await requestExecutor<unknown>(axiosRequestConfig);
+    }
+  }
+};

@@ -62,6 +62,7 @@ export const ListFeature: FC = () => {
       );
 
       console.log(deleteItemIdListFromNodeList);
+      dispatch(notesSlice.thunks.deleteNodeListThunk(deleteItemIdListFromNodeList));
     }
   };
 
@@ -75,6 +76,7 @@ export const ListFeature: FC = () => {
       );
 
       console.log(deleteItemIdListFromNodeList);
+      dispatch(notesSlice.thunks.deleteNodeListThunk(deleteItemIdListFromNodeList));
     }
   };
 

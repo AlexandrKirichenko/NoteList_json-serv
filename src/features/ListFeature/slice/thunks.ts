@@ -51,3 +51,12 @@ export const patchNoteItemThunk = createAsyncThunk(
     return response;
   },
 );
+
+export const deleteNodeListThunk = createAsyncThunk(
+  `${SLICE_NAME}/deleteNodeList`,
+  async (nodeItemIdList: string[], { dispatch }) => {
+    const response = await api.notes.deleteNodeList(nodeItemIdList);
+    dispatch(fetchNoteListThunk());
+    return response;
+  },
+);
