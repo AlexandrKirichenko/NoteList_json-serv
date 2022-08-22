@@ -8,6 +8,7 @@ export const Spinner: FC = () => {
   const fetchNoteListRequest = useAppSelector(notesSlice.selectors.getFetchNoteListRequest);
   const addNoteItemRequest = useAppSelector(notesSlice.selectors.getAddNoteItemRequest);
   const patchNoteItemRequest = useAppSelector(notesSlice.selectors.getPatchNoteItemRequest);
+  const deleteNodeListRequest = useAppSelector(notesSlice.selectors.getDeleteNodeListRequest);
 
   const loginRequest = useAppSelector(authSlice.selectors.getLoginRequest);
   const signUpRequest = useAppSelector(authSlice.selectors.getSignUpRequest);
@@ -17,7 +18,8 @@ export const Spinner: FC = () => {
     addNoteItemRequest.isLoading ||
     patchNoteItemRequest.isLoading ||
     loginRequest.isLoading ||
-    signUpRequest.isLoading;
+    signUpRequest.isLoading ||
+    deleteNodeListRequest.isLoading;
 
   return isLoading ? <div className={styles.Spinner} /> : null;
 };

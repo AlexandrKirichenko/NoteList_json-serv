@@ -9,3 +9,6 @@ export const getAddNoteItemRequest = (store: RootState): RequestSliceStateProper
 
 export const getPatchNoteItemRequest = (store: RootState): RequestSliceStateProperty<unknown> =>
   store.notes.patchNoteItemRequest;
+
+export const getDeleteNodeListRequest = (store: RootState): RequestSliceStateProperty<unknown> =>
+  store.notes.deleteNodeListRequest;
