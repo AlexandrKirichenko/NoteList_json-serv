@@ -61,7 +61,6 @@ export const ListFeature: FC = () => {
         true,
       );
 
-      console.log(deleteItemIdListFromNodeList);
       dispatch(notesSlice.thunks.deleteNodeListThunk(deleteItemIdListFromNodeList));
     }
   };
@@ -75,14 +74,18 @@ export const ListFeature: FC = () => {
         false,
       );
 
-      console.log(deleteItemIdListFromNodeList);
       dispatch(notesSlice.thunks.deleteNodeListThunk(deleteItemIdListFromNodeList));
     }
+  };
+
+  const handleUpdateButton = () => {
+    dispatch(notesSlice.thunks.fetchNoteListThunk());
   };
 
   return (
     <>
       <div>
+        <button onClick={handleUpdateButton}>ЭТО КНОПКА ОБНОВЛЕНИЯ СПИСКА</button>
         <NoteView
           noteViewItem={noteViewList[0]}
           noteViewList={noteViewList}
