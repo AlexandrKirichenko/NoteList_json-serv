@@ -84,5 +84,7 @@ export const changeOrderThunk = createAsyncThunk(
         dispatch(fetchNoteListThunk());
       }
     }
+
+    return null;
   },
 );

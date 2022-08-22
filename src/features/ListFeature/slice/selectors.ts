@@ -12,3 +12,6 @@ export const getPatchNoteItemRequest = (store: RootState): RequestSliceStateProp
 
 export const getDeleteNodeListRequest = (store: RootState): RequestSliceStateProperty<unknown> =>
   store.notes.deleteNodeListRequest;
+
+export const getChangeOrderRequest = (store: RootState): RequestSliceStateProperty<unknown> =>
+  store.notes.changeOrderRequest;

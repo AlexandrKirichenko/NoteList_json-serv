@@ -10,6 +10,7 @@ interface InitialState {
   addNoteItemRequest: RequestSliceStateProperty<unknown>;
   patchNoteItemRequest: RequestSliceStateProperty<unknown>;
   deleteNodeListRequest: RequestSliceStateProperty<unknown>;
+  changeOrderRequest: RequestSliceStateProperty<unknown>;
 }
 
 const initialState: InitialState = {
@@ -17,6 +18,7 @@ const initialState: InitialState = {
   addNoteItemRequest: makeRequestSliceStateProperty<unknown>(),
   patchNoteItemRequest: makeRequestSliceStateProperty<unknown>(),
   deleteNodeListRequest: makeRequestSliceStateProperty<unknown>(),
+  changeOrderRequest: makeRequestSliceStateProperty<unknown>(),
 };
 
 export const { actions, reducer } = createSlice({
@@ -40,5 +42,6 @@ export const { actions, reducer } = createSlice({
       thunks.deleteNodeListThunk,
       'deleteNodeListRequest',
     );
+    makeRequestCaseToBuilder<InitialState>(builder, thunks.changeOrderThunk, 'changeOrderRequest');
   },
 });
