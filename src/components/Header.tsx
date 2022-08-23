@@ -25,6 +25,7 @@ export default function Header() {
 
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector(authSlice.selectors.getIsAuth);
+  const loginRequest = useAppSelector(authSlice.selectors.getLoginRequest);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -81,6 +82,9 @@ export default function Header() {
           <Typography variant="h4" component="h4" sx={{ flexGrow: 1, alignItems: 'center' }}>
             Notes
           </Typography>
+          {isAuth && loginRequest.data && (
+            <div style={{ color: 'black' }}>{loginRequest.data.email}</div>
+          )}
           {isAuth && (
             <FormGroup>
               <FormControlLabel
