@@ -1,11 +1,9 @@
-import { FC, MouseEvent } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -40,15 +38,15 @@ const VALIDATION_SCHEMA = yup.object({
 
 export const SignUpMainForm: FC = () => {
   const dispatch = useAppDispatch();
-
+  const [successAlertFlag, setSuccessAlertFlag] = useState(false);
   const signUpRequest = useAppSelector(authSlice.selectors.getSignUpRequest);
 
   const formik = useFormik<SignUpData>({
     initialValues: INITIAL_VALUES,
     validationSchema: VALIDATION_SCHEMA,
     onSubmit: (values) => {
+      setSuccessAlertFlag(!successAlertFlag);
       const successCb = () => {
-        alert('вы успешно зарегистрировали пользователя!');
         dispatch(appSlice.actions.redirect(getRoutePath('LoginPage')));
       };
 
@@ -60,10 +58,17 @@ export const SignUpMainForm: FC = () => {
     e.preventDefault();
     dispatch(appSlice.actions.redirect(getRoutePath('LoginPage')));
   };
-
+  console.log('successAlertFlag', successAlertFlag);
   return (
     <div>
       <ThemeProvider theme={theme}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          {successAlertFlag && !signUpRequest.error && (
+            <Alert severity="success">
+              Congratulations! Your registration was successful completed.
+            </Alert>
+          )}
+        </Box>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -80,9 +85,11 @@ export const SignUpMainForm: FC = () => {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
-
-            {signUpRequest.error && <div>ERROR REQUEST: {signUpRequest.error.errorMsg}</div>}
-
+            {signUpRequest.error && (
+              <Typography sx={{ color: '#d3466b' }} component="h3" variant="subtitle2">
+                ERROR REQUEST: {signUpRequest.error.errorMsg}
+              </Typography>
+            )}
             <Box
               component="form"
               noValidate
@@ -98,12 +105,11 @@ export const SignUpMainForm: FC = () => {
                     fullWidth
                     id="firstName"
                     label="First Name"
-                    autoFocus
                     {...formik.getFieldProps('firstName')}
+                    error={Boolean(formik.touched.firstName) && Boolean(formik.errors.firstName)}
+                    name="firstName"
+                    helperText={formik.errors.firstName}
                   />
-                  {Boolean(formik.touched.firstName) && Boolean(formik.errors.firstName) ? (
-                    <div className="msg-error">{formik.errors.firstName}</div>
-                  ) : null}
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
@@ -114,10 +120,10 @@ export const SignUpMainForm: FC = () => {
                     label="Last Name"
                     autoComplete="family-name"
                     {...formik.getFieldProps('lastName')}
+                    error={Boolean(formik.touched.lastName) && Boolean(formik.errors.lastName)}
+                    name="lastName"
+                    helperText={formik.errors.lastName}
                   />
-                  {Boolean(formik.touched.lastName) && Boolean(formik.errors.lastName) ? (
-                    <div className="msg-error">{formik.errors.lastName}</div>
-                  ) : null}
                 </Grid>
 
                 <Grid item xs={12}>
@@ -128,10 +134,10 @@ export const SignUpMainForm: FC = () => {
                     label="Email Address"
                     autoComplete="email"
                     {...formik.getFieldProps('email')}
+                    error={Boolean(formik.touched.email) && Boolean(formik.errors.email)}
+                    name="email"
+                    helperText={formik.errors.email}
                   />
-                  {Boolean(formik.touched.email) && Boolean(formik.errors.email) ? (
-                    <div className="msg-error">{formik.errors.email}</div>
-                  ) : null}
                 </Grid>
 
                 <Grid item xs={12}>
@@ -143,25 +149,18 @@ export const SignUpMainForm: FC = () => {
                     id="password"
                     autoComplete="new-password"
                     {...formik.getFieldProps('password')}
+                    error={Boolean(formik.touched.password) && Boolean(formik.errors.password)}
+                    name="password"
+                    helperText={formik.errors.password}
                   />
-                  {Boolean(formik.touched.password) && Boolean(formik.errors.password) ? (
-                    <div className="msg-error">{formik.errors.password}</div>
-                  ) : null}
                 </Grid>
-
-                {/*<Grid item xs={12}>*/}
-                {/*  <FormControlLabel*/}
-                {/*    control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
-                {/*    label="I want to receive inspiration, marketing promotions and updates via email."*/}
-                {/*  />*/}
-                {/*</Grid>*/}
               </Grid>
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, height: 45 }}>
                 Sign Up
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="/signin" variant="body2" onClick={handleGoToSignIn}>
+                  <Link href="/login" variant="body2" onClick={handleGoToSignIn}>
                     Already have an account? Sign in
                   </Link>
                 </Grid>

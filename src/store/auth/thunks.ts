@@ -8,16 +8,19 @@ import { authSlice } from './index';
 export const loginThunk = createAsyncThunk(
   `${SLICE_NAME}/loginThunk`,
   async (credential: LoginCredentials, { dispatch, rejectWithValue }) => {
+    //решение из доки тулкита, чтоб достучаться до msg Response от сервера, т.к. по умолчанию оно не попадает в error
     try {
       const response = await api.auth.login(credential);
 
       dispatch(authSlice.actions.setIsAuth(true));
 
       return response;
-    } catch (e) {
+    } catch (e: any) {
+      // axios прикрепляет ответ от сервера
       if (!e?.response?.data) {
         throw e;
       }
+      // f от редакса которая эмулирует доп. обработчик ошибок и в него можно написать, что угодно в payload в хелперах
       return rejectWithValue(e?.response?.data);
     }
   },
@@ -35,7 +38,7 @@ export const singUpThunk = createAsyncThunk(
       const response = await api.auth.signUp(signUpData);
       successCb();
       return response;
-    } catch (e) {
+    } catch (e: any) {
       if (!e?.response?.data) {
         throw e;
       }

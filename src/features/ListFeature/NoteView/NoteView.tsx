@@ -1,33 +1,27 @@
-import Typography from '@mui/material/Typography';
-import React, { FC, ReactNode, useState } from 'react';
-import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import TextField from '@mui/material/TextField';
+import React, { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
-// import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import Box from '@mui/material/Box';
-import { shadows } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-// import Zoom from '@mui/material/Zoom'
+import EditIcon from '@mui/icons-material/Edit';
 import Fade from '@mui/material/Fade';
-import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import RemoveIcon from '@mui/icons-material/Remove';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-// import { positions } from '@mui/system';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ListItemText from '@mui/material/ListItemText';
+import DoneIcon from '@mui/icons-material/Done';
+import NorthIcon from '@mui/icons-material/North';
+import SouthIcon from '@mui/icons-material/South';
+import { Badge, Stack } from '@mui/material';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import MenuIcon from '@mui/icons-material/Menu';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import { NoteViewItem, NoteViewList } from '../types';
 import { NoteEditFormValues } from './types';
 import { NoteEditForm } from './NoteEditForm';
-import styles from './NoteView.module.scss';
-import { UpIcon } from './Icon';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -51,6 +45,8 @@ interface NoteViewProps {
   isEnableDeleteItem: boolean;
   onDeleteItem: (id: string) => void;
   onDeleteSublist: (id: string) => void;
+  onEdit: (id: string, title: string) => void;
+  isBorder: boolean;
 }
 
 const NOTE_EDIT_FORM_INITIAL_STATE: NoteEditFormValues = {
@@ -66,13 +62,25 @@ export const NoteView: FC<NoteViewProps> = ({
   id,
   children,
   onChangeOrder,
+  onEdit,
   isEnableDeleteItem,
   onDeleteItem,
   onDeleteSublist,
+  isBorder,
 }) => {
   const [noteEditFormInitialState, setNoteEditFormInitialState] = useState<NoteEditFormValues>({
     ...NOTE_EDIT_FORM_INITIAL_STATE,
   });
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [value, setValue] = useState(noteViewItem.title);
+  const editTitleInputRef = useRef<HTMLInputElement>(null);
+  const [isShowChildren, setIsShowChildren] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isEditMode) {
+      editTitleInputRef?.current?.focus();
+    }
+  }, [isEditMode]);
 
   const handleFormSubmit = (values: NoteEditFormValues) => {
     setNoteEditFormInitialState((prev) => ({
@@ -93,45 +101,187 @@ export const NoteView: FC<NoteViewProps> = ({
     (a, b) => noteViewList[a].order - noteViewList[b].order,
   );
 
+  console.log('childListViewRRRR', childListView);
+
   return (
-    <ul className={styles.wrapper}>
-      <li className={styles.listItemWrap}>
-        {/*<div className={styles.itemTitle}>{noteViewItem.title}</div>*/}
-        <Box sx={{ display: 'flex', flex: 'wrap', alignItems: 'center' }}>
-          <Box sx={{ width: '90%' }}>
-            <ListItemText
-              sx={{
-                fontSize: 24,
-                border: '1px solid red',
-                color: '#2d3843',
-                backgroundColor: 'white',
-                wordBreak: 'break-all',
-              }}
-            >
-              {noteViewItem.title}
-            </ListItemText>
+    // <TransitionGroup component={List}>
+    <List sx={{ padding: '0.2em 0 0.2em 0.3em' }}>
+      <ListItem sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flex: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 10px',
+            border: isBorder ? '1px solid lightgray' : 'none',
+            borderRadius: '5px',
+            boxShadow: isBorder ? 'rgba(0, 0, 0, 0.35) 0px 5px 15px' : 'none',
+          }}
+        >
+          <Box sx={{ width: '75%' }}>
+            {isEditMode ? (
+              <TextField
+                sx={{ width: '65%', height: 30, marginLeft: '1em' }}
+                value={value}
+                variant="standard"
+                onChange={(e) => {
+                  setValue(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onEdit(id, value);
+                    setIsEditMode(false);
+                  }
+                }}
+                label="Edit note"
+                fullWidth
+                maxRows={4}
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                }}
+              >
+                {!!childListView.length && (
+                  <>
+                    <Stack spacing={2} direction="row">
+                      <Badge
+                        badgeContent={!isShowChildren ? childListView.length : 0}
+                        color="success"
+                        onClick={() => setIsShowChildren((prev) => !prev)}
+                      >
+                        {isShowChildren ? (
+                          <LightTooltip
+                            title="Display sublist"
+                            TransitionComponent={Fade}
+                            TransitionProps={{ timeout: 600 }}
+                          >
+                            <PlaylistPlayIcon
+                              sx={{
+                                fontSize: 36,
+                                color: '#2d3843',
+                                '&:hover': {
+                                  color: '#93cc61',
+                                },
+                              }}
+                              color="action"
+                              cursor={'pointer'}
+                            />
+                          </LightTooltip>
+                        ) : (
+                          <LightTooltip
+                            title="Hide sublist"
+                            TransitionComponent={Fade}
+                            TransitionProps={{ timeout: 600 }}
+                          >
+                            <MenuIcon
+                              sx={{ fontSize: 30, color: '#2d3843' }}
+                              color="action"
+                              cursor={'pointer'}
+                            />
+                          </LightTooltip>
+                        )}
+                      </Badge>
+                    </Stack>
+                    <LightTooltip
+                      title="Delete sublist"
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 600 }}
+                    >
+                      <IconButton
+                        onClick={() => onDeleteSublist(id)}
+                        id={id}
+                        aria-label="delete"
+                        size="large"
+                      >
+                        <PlaylistRemoveIcon
+                          sx={{
+                            // #2d3843
+                            fontSize: 36,
+                            color: '#2d3843',
+                            '&:hover': {
+                              color: '#be0000',
+                            },
+                          }}
+                        />
+                      </IconButton>
+                    </LightTooltip>
+                  </>
+                )}
+                <ListItemText
+                  sx={{
+                    fontSize: 24,
+                    color: '#2d3843',
+                    backgroundColor: 'white',
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  {noteViewItem.title}
+                </ListItemText>
+              </Box>
+            )}
           </Box>
           {isEnableDeleteItem && (
-            <div>
-              {noteViewItem.isEnableSubList && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {children && <Box sx={{ display: 'flex', alignItems: 'center' }}>{children}</Box>}
+              {isEditMode ? (
                 <LightTooltip
-                  title="Delete sublist"
+                  title="Save changes"
                   TransitionComponent={Fade}
                   TransitionProps={{ timeout: 600 }}
                 >
                   <IconButton
-                    onClick={() => onDeleteSublist(id)}
+                    onClick={() => {
+                      onEdit(id, value);
+                      setIsEditMode(false);
+                    }}
                     id={id}
-                    aria-label="delete"
-                    size="large"
+                    aria-label="save"
+                    size="small"
                   >
-                    <PlaylistRemoveIcon
+                    <DoneIcon
                       sx={{
                         // #2d3843
                         fontSize: 28,
                         color: '#2d3843',
                         '&:hover': {
-                          color: '#be0000',
+                          color: '#93cc61',
+                        },
+                      }}
+                    />
+                  </IconButton>
+                </LightTooltip>
+              ) : (
+                <LightTooltip
+                  title="Edit note title"
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 600 }}
+                >
+                  <IconButton
+                    onClick={() => {
+                      setIsEditMode(true);
+                    }}
+                    id={id}
+                    aria-label="edit"
+                    size="small"
+                  >
+                    <EditIcon
+                      sx={{
+                        // #2d3843
+                        fontSize: 28,
+                        color: '#2d3843',
+                        '&:hover': {
+                          color: '#ff790f',
                         },
                       }}
                     />
@@ -150,7 +300,15 @@ export const NoteView: FC<NoteViewProps> = ({
                     aria-label="add"
                     size="large"
                   >
-                    <PlaylistAddIcon sx={{ fontSize: 36, color: '#2d3843' }} />
+                    <PlaylistAddIcon
+                      sx={{
+                        fontSize: 36,
+                        color: '#2d3843',
+                        '&:hover': {
+                          color: '#93cc61',
+                        },
+                      }}
+                    />
                   </IconButton>
                 </LightTooltip>
               )}
@@ -167,7 +325,7 @@ export const NoteView: FC<NoteViewProps> = ({
                 >
                   <DeleteOutlineIcon
                     sx={{
-                      fontSize: 20,
+                      fontSize: 28,
                       color: '#2d3843',
                       '&:hover': {
                         color: '#be0000',
@@ -176,10 +334,9 @@ export const NoteView: FC<NoteViewProps> = ({
                   />
                 </IconButton>
               </LightTooltip>
-            </div>
+            </Box>
           )}
         </Box>
-        {children && <div>{children}</div>}
         {noteViewItem.isEnableSubList && (
           <NoteEditForm
             initialValues={noteEditFormInitialState}
@@ -191,72 +348,89 @@ export const NoteView: FC<NoteViewProps> = ({
           />
         )}
         <div>
-          {childListView.map((childId, index) => (
-            <NoteView
-              noteViewItem={noteViewList[childId]}
-              key={childId}
-              noteViewList={noteViewList}
-              onAddItem={onAddItem}
-              id={childId}
-              onAddSublist={onAddSublist}
-              onChangeOrder={onChangeOrder}
-              isEnableDeleteItem={true}
-              onDeleteItem={onDeleteItem}
-              onDeleteSublist={onDeleteSublist}
-            >
-              {/*{index > 0 && (*/}
-              {/*  <IconButton*/}
-              {/*    onClick={() => onChangeOrder(childListView[index], childListView[index - 1])}*/}
-              {/*    id={id}*/}
-              {/*    aria-label="delete"*/}
-              {/*    size="large"*/}
-              {/*  >*/}
-              {/*    <KeyboardArrowUpIcon sx={{ fontSize: 36 }} />*/}
-              {/*  </IconButton>*/}
-              {/*)}*/}
-              {/*{index < childListView.length - 1 && (*/}
-              {/*  // <div*/}
-              {/*  //   className={styles.buttonUp}*/}
-              {/*  //   onClick={() =>*/}
-              {/*  //     onChangeOrder(*/}
-              {/*  //       childListView[index + 1],*/}
-              {/*  //       childListView[index],*/}
-              {/*  //     )*/}
-              {/*  //   }*/}
-              {/*  // >*/}
-              {/*  //   <UpIcon Icon={RiArrowDownSLine} />*/}
-              {/*  // </div>*/}
-              {/*  <IconButton*/}
-              {/*    // sx={{ zIndex: 'top' }}*/}
-              {/*    // position="absolute"*/}
-              {/*    onClick={() => onChangeOrder(childListView[index], childListView[index - 1])}*/}
-              {/*    id={id}*/}
-              {/*    aria-label="delete"*/}
-              {/*    size="large"*/}
-              {/*  >*/}
-              {/*    <KeyboardArrowDownIcon sx={{ fontSize: 36 }} />*/}
-              {/*  </IconButton>*/}
-              {/*)}*/}
-              {index > 0 && (
-                <div
-                  className={styles.buttonDown}
-                  onClick={() => onChangeOrder(childListView[index], childListView[index - 1])}
+          <AnimatePresence exitBeforeEnter>
+            {childListView
+              .filter((childId, index, arr) => (isShowChildren ? true : arr.length - 1 === index))
+              .map((childId, index) => (
+                <motion.div
+                  key={childId}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  <UpIcon Icon={RiArrowUpSLine} />
-                </div>
-              )}
-              {index < childListView.length - 1 && (
-                <div
-                  className={styles.buttonUp}
-                  onClick={() => onChangeOrder(childListView[index + 1], childListView[index])}
-                >
-                  <UpIcon Icon={RiArrowDownSLine} />
-                </div>
-              )}
-            </NoteView>
-          ))}
+                  <NoteView
+                    noteViewItem={noteViewList[childId]}
+                    key={childId}
+                    noteViewList={noteViewList}
+                    onAddItem={onAddItem}
+                    id={childId}
+                    onEdit={onEdit}
+                    onAddSublist={onAddSublist}
+                    onChangeOrder={onChangeOrder}
+                    isEnableDeleteItem={true}
+                    onDeleteItem={onDeleteItem}
+                    onDeleteSublist={onDeleteSublist}
+                    isBorder={true}
+                  >
+                    {index > 0 && (
+                      <LightTooltip
+                        title="Move note up"
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                      >
+                        <IconButton
+                          onClick={() =>
+                            onChangeOrder(childListView[index], childListView[index - 1])
+                          }
+                          aria-label="up"
+                          size="small"
+                        >
+                          <NorthIcon
+                            sx={{
+                              fontSize: 28,
+                              color: '#2d3843',
+                              '&:hover': {
+                                color: 'blue',
+                              },
+                            }}
+                          />
+                        </IconButton>
+                      </LightTooltip>
+                    )}
+                    {index < childListView.length - 1 && (
+                      <LightTooltip
+                        title="Move note down"
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                      >
+                        <IconButton
+                          onClick={() =>
+                            onChangeOrder(childListView[index + 1], childListView[index])
+                          }
+                          aria-label="down"
+                          size="small"
+                        >
+                          <SouthIcon
+                            sx={{
+                              // #2d3843
+                              fontSize: 28,
+                              color: '#2d3843',
+                              '&:hover': {
+                                color: 'blue',
+                              },
+                            }}
+                          />
+                        </IconButton>
+                      </LightTooltip>
+                    )}
+                  </NoteView>
+                </motion.div>
+              ))}
+          </AnimatePresence>
         </div>
-      </li>
-    </ul>
+      </ListItem>
+    </List>
+    // </TransitionGroup>
   );
 };

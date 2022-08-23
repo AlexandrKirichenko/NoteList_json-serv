@@ -4,14 +4,11 @@ import React, { FC } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-
-import { Button } from '../Button';
+import Box from '@mui/material/Box';
 import { NoteEditFormValues } from '../types';
-import styles from './NoteEditForm.module.scss';
 
 interface NoteEditFormProps {
   initialValues: NoteEditFormValues;
@@ -52,39 +49,38 @@ export const NoteEditForm: FC<NoteEditFormProps> = ({
   });
 
   return (
-    <form onSubmit={formik.handleSubmit} noValidate autoComplete={'off'} className={styles.wrap}>
-      <TextField
-        sx={{ width: '35%', height: 20, marginLeft: '1em' }}
-        id="outlined-multiline-flexible"
-        label="Add new note"
-        variant="standard"
-        fullWidth
-        // multiline
-        maxRows={4}
-        {...formik.getFieldProps('title')}
-        autoFocus={autoFocus}
-      />
-      {/*<input*/}
-      {/*  className={styles.input}*/}
-      {/*  type="text"*/}
-      {/*  placeholder={placeholder}*/}
-      {/*  {...formik.getFieldProps('title')}*/}
-      {/*  autoFocus={autoFocus}*/}
-      {/*/>*/}
-      <LightTooltip title="Add note" TransitionComponent={Fade} TransitionProps={{ timeout: 600 }}>
-        <IconButton type={'submit'} id={id} aria-label="add" size="large">
-          <AddIcon
-            sx={{
-              // #2D3843FF
-              fontSize: 36,
-              color: '#2D3843FF',
-              '&:hover': {
-                color: 'blue',
-              },
-            }}
+    <Box sx={{ marginInline: 'auto', paddingTop: '0.3em' }}>
+      <form onSubmit={formik.handleSubmit} noValidate autoComplete={'off'}>
+        <Box sx={{ marginInline: 'auto', display: 'flex' }}>
+          <TextField
+            sx={{ minWidth: '400px', height: 20, marginLeft: '1em' }}
+            id="outlined-multiline-flexible"
+            label="Add new note"
+            variant="standard"
+            fullWidth
+            maxRows={4}
+            {...formik.getFieldProps('title')}
+            autoFocus={autoFocus}
           />
-        </IconButton>
-      </LightTooltip>
-    </form>
+          <LightTooltip
+            title="Add note"
+            TransitionComponent={Fade}
+            TransitionProps={{ timeout: 600 }}
+          >
+            <IconButton type={'submit'} id={id} aria-label="add" size="large">
+              <AddIcon
+                sx={{
+                  fontSize: 30,
+                  color: '#2D3843FF',
+                  '&:hover': {
+                    color: '#93cc61',
+                  },
+                }}
+              />
+            </IconButton>
+          </LightTooltip>
+        </Box>
+      </form>
+    </Box>
   );
 };

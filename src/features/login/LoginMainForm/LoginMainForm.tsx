@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Container from '@mui/material/Container';
@@ -8,11 +8,10 @@ import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
 import { authSlice } from '../../../store/auth';
@@ -24,8 +23,8 @@ import { getRoutePath } from '../../../router';
 const theme = createTheme();
 
 const INITIAL_VALUES: LoginCredentials = {
-  email: 'ddd@ddd.ru',
-  password: '123456',
+  email: '',
+  password: '',
 };
 
 const VALIDATION_SCHEMA = yup.object({
@@ -34,8 +33,8 @@ const VALIDATION_SCHEMA = yup.object({
 });
 
 export const LoginMainForm: FC = () => {
+  const [successAlert, setSuccessAlert] = useState(false);
   const dispatch = useAppDispatch();
-
   const loginRequest = useAppSelector(authSlice.selectors.getLoginRequest);
 
   const formik = useFormik<LoginCredentials>({
@@ -43,6 +42,7 @@ export const LoginMainForm: FC = () => {
     validationSchema: VALIDATION_SCHEMA,
     onSubmit: (values) => {
       dispatch(authSlice.thunks.loginThunk(values));
+      setSuccessAlert(!successAlert);
     },
   });
 
@@ -54,6 +54,10 @@ export const LoginMainForm: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <Container component="div" maxWidth="xs">
+        {/*{successAlert && !Boolean(loginRequest.error?.errorMsg)*/}
+        {/*  ? // <Alert severity="success">You have been successfully signed in!</Alert>*/}
+        {/*    console.log('ok')*/}
+        {/*  : console.log('error')}*/}
         <CssBaseline />
         <Box
           sx={{
@@ -69,7 +73,11 @@ export const LoginMainForm: FC = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          {loginRequest.error && <div>ERROR REQUEST: {loginRequest.error.errorMsg}</div>}
+          {loginRequest.error && (
+            <Typography sx={{ color: '#d3466b' }} component="h3" variant="subtitle2">
+              ERROR REQUEST: {loginRequest.error.errorMsg}
+            </Typography>
+          )}
           <Box
             component="form"
             noValidate
@@ -83,12 +91,11 @@ export const LoginMainForm: FC = () => {
               fullWidth
               label="Email Address"
               autoComplete="email"
-              autoFocus
               {...formik.getFieldProps('email')}
+              error={Boolean(formik.touched.email) && Boolean(formik.errors.email)}
+              name="email"
+              helperText={formik.errors.email}
             />
-            {Boolean(formik.touched.email) && Boolean(formik.errors.email) ? (
-              <div className="msg-error">{formik.errors.email}</div>
-            ) : null}
             <TextField
               margin="normal"
               required
@@ -97,16 +104,16 @@ export const LoginMainForm: FC = () => {
               type="password"
               autoComplete="current-password"
               {...formik.getFieldProps('password')}
+              error={Boolean(formik.touched.password) && Boolean(formik.errors.password)}
+              name="password"
+              helperText={formik.errors.password}
             />
-            {Boolean(formik.touched.password) && Boolean(formik.errors.password) ? (
-              <div>{formik.errors.password}</div>
-            ) : null}
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2, height: 45 }}>
               Sign In
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/singup" variant="body2" onClick={handleGoToSignUp}>
+                <Link variant="body2" onClick={handleGoToSignUp}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

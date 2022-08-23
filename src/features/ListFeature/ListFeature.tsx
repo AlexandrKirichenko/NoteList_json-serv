@@ -1,13 +1,43 @@
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 import React, { FC, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import Fade from '@mui/material/Fade';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { NoteItem } from './types';
-import { getDeleteItemIdListFromNodeList, getNoteViewList } from './helpers';
-import { NoteView } from './NoteView';
 import { notesSlice } from './slice';
+import { NoteView } from './NoteView';
+import { getDeleteItemIdListFromNodeList, getNoteViewList } from './helpers';
+import { NoteItem } from './types';
+
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}));
 
 export const ListFeature: FC = () => {
   const dispatch = useAppDispatch();
   const noteListRequest = useAppSelector(notesSlice.selectors.getFetchNoteListRequest);
+  const addNoteItemRequest = useAppSelector(notesSlice.selectors.getAddNoteItemRequest);
+  const patchNoteItemRequest = useAppSelector(notesSlice.selectors.getPatchNoteItemRequest);
+  const deleteNodeListRequest = useAppSelector(notesSlice.selectors.getDeleteNodeListRequest);
+  const changeOrderRequest = useAppSelector(notesSlice.selectors.getChangeOrderRequest);
+  const errors = [
+    noteListRequest,
+    addNoteItemRequest,
+    patchNoteItemRequest,
+    deleteNodeListRequest,
+    changeOrderRequest,
+  ];
 
   useEffect(() => {
     dispatch(notesSlice.thunks.fetchNoteListThunk());
@@ -36,6 +66,19 @@ export const ListFeature: FC = () => {
         const noteItem: NoteItem = {
           ...currentNoteItem,
           isEnableSubList: true,
+        };
+        dispatch(notesSlice.thunks.patchNoteItemThunk({ noteItem, id }));
+      }
+    }
+  };
+
+  const handleEditList = (id: string, title: string) => {
+    if (noteListRequest.data) {
+      const currentNoteItem = noteListRequest.data[id];
+      if (currentNoteItem) {
+        const noteItem: NoteItem = {
+          ...currentNoteItem,
+          title,
         };
         dispatch(notesSlice.thunks.patchNoteItemThunk({ noteItem, id }));
       }
@@ -72,26 +115,60 @@ export const ListFeature: FC = () => {
     }
   };
 
-  const handleUpdateButton = () => {
-    dispatch(notesSlice.thunks.fetchNoteListThunk());
-  };
+  const isBorder = false;
 
   return (
     <>
-      <div>
-        <button onClick={handleUpdateButton}>ЭТО КНОПКА ОБНОВЛЕНИЯ СПИСКА</button>
+      <Box>
+        {errors.map((el) => {
+          return el.error ? (
+            <Typography
+              sx={{ color: '#d3466b', textAlign: 'center' }}
+              component="h3"
+              variant="subtitle2"
+            >
+              ERROR REQUEST: {el.error.errorMsg}
+            </Typography>
+          ) : null;
+        })}
+        <LightTooltip
+          title="Update Note list"
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 600 }}
+        >
+          <IconButton
+            onClick={() => {
+              dispatch(notesSlice.thunks.fetchNoteListThunk());
+            }}
+            aria-label="list update"
+            size="small"
+          >
+            <RefreshIcon
+              sx={{
+                // #2d3843
+                fontSize: 28,
+                color: '#2d3843',
+                '&:hover': {
+                  color: 'blue',
+                },
+              }}
+            />
+          </IconButton>
+        </LightTooltip>
         <NoteView
           noteViewItem={noteViewList[0]}
           noteViewList={noteViewList}
           onAddItem={handleAddItem}
           id={'0'}
+          onEdit={handleEditList}
           onAddSublist={handleAddSubList}
           onChangeOrder={handleChangeOrder}
           isEnableDeleteItem={false}
           onDeleteItem={handleDeleteItem}
           onDeleteSublist={handleDeleteSublist}
+          isBorder={isBorder}
         />
-      </div>
+      </Box>
     </>
   );
 };

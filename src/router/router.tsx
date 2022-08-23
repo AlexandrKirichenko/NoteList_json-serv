@@ -34,16 +34,6 @@ export const Router: FC = () => {
             );
           }
 
-          // if (!route.isNotInPrivate && !isAuth) {
-          //   return (
-          //     <Route
-          //       path={route.path}
-          //       key={routeName}
-          //       element={<Navigate to={getRoutePath('SignUpPage')} />}
-          //     />
-          //   );
-          // }
-
           return <Route path={route.path} key={routeName} element={<route.component />} />;
         })}
       </Routes>
