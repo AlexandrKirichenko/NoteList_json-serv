@@ -18,10 +18,10 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import MenuIcon from '@mui/icons-material/Menu';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import { AnimatePresence, motion } from 'framer-motion';
 import { NoteViewItem, NoteViewList } from '../types';
 import { NoteEditFormValues } from './types';
 import { NoteEditForm } from './NoteEditForm';
-import { AnimatePresence, motion } from 'framer-motion';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -100,11 +100,8 @@ export const NoteView: FC<NoteViewProps> = ({
   const childListView = [...noteViewItem.childIdList].sort(
     (a, b) => noteViewList[a].order - noteViewList[b].order,
   );
-
-  console.log('childListViewRRRR', childListView);
-
+  //TODO:  LightTooltip in separate component, to much code in component
   return (
-    // <TransitionGroup component={List}>
     <List sx={{ padding: '0.2em 0 0.2em 0.3em' }}>
       <ListItem sx={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
         <Box
@@ -156,6 +153,24 @@ export const NoteView: FC<NoteViewProps> = ({
                       >
                         {isShowChildren ? (
                           <LightTooltip
+                            title="Hide sublist"
+                            TransitionComponent={Fade}
+                            TransitionProps={{ timeout: 600 }}
+                          >
+                            <MenuIcon
+                              sx={{
+                                fontSize: 30,
+                                color: '#2d3843',
+                                '&:hover': {
+                                  color: '#93cc61',
+                                },
+                              }}
+                              color="action"
+                              cursor={'pointer'}
+                            />
+                          </LightTooltip>
+                        ) : (
+                          <LightTooltip
                             title="Display sublist"
                             TransitionComponent={Fade}
                             TransitionProps={{ timeout: 600 }}
@@ -168,18 +183,6 @@ export const NoteView: FC<NoteViewProps> = ({
                                   color: '#93cc61',
                                 },
                               }}
-                              color="action"
-                              cursor={'pointer'}
-                            />
-                          </LightTooltip>
-                        ) : (
-                          <LightTooltip
-                            title="Hide sublist"
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 600 }}
-                          >
-                            <MenuIcon
-                              sx={{ fontSize: 30, color: '#2d3843' }}
                               color="action"
                               cursor={'pointer'}
                             />
@@ -251,7 +254,6 @@ export const NoteView: FC<NoteViewProps> = ({
                   >
                     <DoneIcon
                       sx={{
-                        // #2d3843
                         fontSize: 28,
                         color: '#2d3843',
                         '&:hover': {
@@ -277,7 +279,6 @@ export const NoteView: FC<NoteViewProps> = ({
                   >
                     <EditIcon
                       sx={{
-                        // #2d3843
                         fontSize: 28,
                         color: '#2d3843',
                         '&:hover': {
@@ -413,7 +414,6 @@ export const NoteView: FC<NoteViewProps> = ({
                         >
                           <SouthIcon
                             sx={{
-                              // #2d3843
                               fontSize: 28,
                               color: '#2d3843',
                               '&:hover': {
@@ -431,6 +431,5 @@ export const NoteView: FC<NoteViewProps> = ({
         </div>
       </ListItem>
     </List>
-    // </TransitionGroup>
   );
 };

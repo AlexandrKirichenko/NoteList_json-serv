@@ -48,6 +48,7 @@ export const SignUpMainForm: FC = () => {
       setSuccessAlertFlag(!successAlertFlag);
       const successCb = () => {
         dispatch(appSlice.actions.redirect(getRoutePath('LoginPage')));
+        //TODO add  dispatch(appSlice.actions.showAlert({title: 'Congratulations!', body: 'Your registration was successful completed.' }));
       };
 
       dispatch(authSlice.thunks.singUpThunk({ signUpData: values, successCb }));
